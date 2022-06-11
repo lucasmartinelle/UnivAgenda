@@ -147,21 +147,23 @@ class _AgendaWidgetState extends State<AgendaWidget> {
       _endTimeText = DateFormat('kk:mm', 'fr')
           .format(appointmentDetails.endTime.add(const Duration(hours: 2)))
           .toString();
-      if (appointmentDetails.isAllDay) {
-        _timeDetails = 'Toute la journée';
-      } else {
-        _timeDetails = '$_startTimeText - $_endTimeText';
-      }
+      _timeDetails = (appointmentDetails.isAllDay)
+          ? 'Toute la journée'
+          : '$_startTimeText - $_endTimeText';
       _locationDetails = appointmentDetails.location;
 
       List<String> detailsNotes =
           appointmentDetails.notes!.replaceAll('\\n', ' ').split(' ');
       if (detailsNotes[2] == 'Grp') {
         _notesGroupDetails = "${detailsNotes[2]} ${detailsNotes[3]}";
-        _notesTeacherDetails = "${detailsNotes[4]} ${detailsNotes[5]}";
+        _notesTeacherDetails = (detailsNotes[4].startsWith("(Exported"))
+            ? ""
+            : "${detailsNotes[4]} ${detailsNotes[5]}";
       } else {
         _notesGroupDetails = detailsNotes[2];
-        _notesTeacherDetails = "${detailsNotes[3]} ${detailsNotes[4]}";
+        _notesTeacherDetails = (detailsNotes[3].startsWith("(Exported"))
+            ? ""
+            : "${detailsNotes[3]} ${detailsNotes[4]}";
       }
 
       showDialog(
