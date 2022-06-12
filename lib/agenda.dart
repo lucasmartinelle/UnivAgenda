@@ -1,12 +1,16 @@
-// ignore_for_file: empty_statements, deprecated_member_use
+// ignore_for_file: deprecated_member_use
 
 import 'dart:core';
 import 'dart:io';
+import 'dart:convert' as convert;
+import 'package:http/http.dart' as http;
 
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show NetworkAssetBundle, rootBundle;
 import 'package:icalendar_parser/icalendar_parser.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -25,6 +29,7 @@ class AgendaWidget extends StatefulWidget {
 
   // Create state
   @override
+  // ignore: library_private_types_in_public_api
   _AgendaWidgetState createState() => _AgendaWidgetState();
 }
 
@@ -46,25 +51,17 @@ class _AgendaWidgetState extends State<AgendaWidget> {
       _notesTeacherDetails = '';
   Color? _headerColor, _viewHeaderColor, _calendarColor;
 
-  /// Get data from .ics file
+  /// Get data from .ics file threw URL
   /// @return Future<void>
-  /// @param assetName      Name of the .ics fle
-  Future<void> _getAssetsFile(String assetName) async {
+  /// @param url      URL to the ics file
+  Future<void> _getAssetsURL(String url) async {
     try {
-      // get file path
-      final directory = await getTemporaryDirectory();
-      final myPath = path.join(directory.path, assetName);
-      final data = await rootBundle.load('assets/$assetName');
-
-      // read file
-      final bytes =
-          data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-      final file = await File(myPath).writeAsBytes(bytes);
-      final lines = await file.readAsLines();
+      Uri urlToCall = Uri.parse(url);
+      http.Response response = await http.get(urlToCall);
 
       // update state to set _iCalendar with .ics data
       setState(() {
-        _iCalendar = ICalendar.fromLines(lines);
+        _iCalendar = ICalendar.fromString(response.body);
       });
       // If an error occured, update stat to cancel CircularProgressIndicator
     } catch (e) {
@@ -82,8 +79,7 @@ class _AgendaWidgetState extends State<AgendaWidget> {
     // list of appointments
     List<Appointment> appointments = <Appointment>[];
 
-    // wait until .ics file was completly read.
-    await _getAssetsFile("ADECal.ics");
+    await _getAssetsURL("");
 
     // add appointment from data parsed
     appointments.addAll(_iCalendar!.data.map((e) => Appointment(

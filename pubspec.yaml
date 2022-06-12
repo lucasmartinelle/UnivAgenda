@@ -40,6 +40,10 @@ dependencies:
   icalendar_parser: ^1.0.1+1
   path_provider: ^2.0.11
   timezone: ^0.8.0
+  http: ^0.13.4
+  ical: ^0.2.2
+  google_fonts: ^3.0.1
+  sqflite: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:
