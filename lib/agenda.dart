@@ -60,6 +60,7 @@ class _AgendaWidgetState extends State<AgendaWidget> {
         setState(() {
           _iCalendar = ICalendar.fromString(response.body);
         });
+
         // If an error occured, update stat to cancel CircularProgressIndicator
       } catch (e) {
         setState(() {
@@ -89,7 +90,6 @@ class _AgendaWidgetState extends State<AgendaWidget> {
 
     if (link != null) {
       await _getAssetsURL(link);
-
       if (_iCalendar != null) {
         // add appointment from data parsed
         appointments.addAll(_iCalendar!.data.map((e) => Appointment(

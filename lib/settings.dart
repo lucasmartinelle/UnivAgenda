@@ -56,6 +56,7 @@ class _SettingWidget extends State<SettingWidget> {
   void updateDatabase() async {
     if (urlController.text.isNotEmpty) {
       var link = Link(link: urlController.text);
+      print('link : ${urlController.text}');
 
       await linkModal().insertLink(link);
     }

@@ -29,7 +29,7 @@ class HomeWidget extends StatelessWidget {
                         textStyle: const TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold))),
                 const SizedBox(height: 10.0),
-                Text("Version: 1.0",
+                Text("Version: 1.0.1",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.montserrat(
                         textStyle: const TextStyle(fontSize: 16))),
