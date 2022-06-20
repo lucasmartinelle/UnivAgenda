@@ -26,7 +26,7 @@ class _SettingWidget extends State<SettingWidget> {
       body: Container(
           padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 20.0),
           alignment: Alignment.center,
-          child: Column(children: [
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Text("Importer un calendrier",
                 textAlign: TextAlign.left,
                 style: GoogleFonts.poppins(

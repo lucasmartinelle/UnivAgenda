@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'home.dart';
 import 'settings.dart';
 import 'agenda.dart';
 
@@ -19,6 +20,7 @@ class Application extends StatelessWidget {
   Widget build(BuildContext context) {
     // On créer un widget "MaterialApp" avec le titre définie plus haut et le composant d'acceuil
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: _title,
       localizationsDelegates: [
         // ... app-specific localization delegate[s] here
@@ -56,10 +58,7 @@ class _StatefulApplication extends State<StatefulApplication> {
   // liste des widgets affichés
   static const List<Widget> _widgetOptions = <Widget>[
     // Premier widget
-    Text(
-      'Home coming soon...',
-      style: optionStyle,
-    ),
+    HomeWidget(),
     // Deuxième widget
     AgendaWidget(),
     // Troisième widget
