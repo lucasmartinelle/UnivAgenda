@@ -1,19 +1,14 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:core';
-import 'dart:io';
-import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show NetworkAssetBundle, rootBundle;
 import 'package:icalendar_parser/icalendar_parser.dart';
-// ignore: depend_on_referenced_packages
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'db/linkModal.dart';
 
 // Datasource for the calendar
 class DataSource extends CalendarDataSource {
@@ -38,6 +33,7 @@ class _AgendaWidgetState extends State<AgendaWidget> {
   // Declare variables
   ICalendar? _iCalendar;
   bool _isLoading = false;
+  bool _isError = false;
   DataSource? _ds;
 
   // Dialog box information for appointments
@@ -55,18 +51,27 @@ class _AgendaWidgetState extends State<AgendaWidget> {
   /// @return Future<void>
   /// @param url      URL to the ics file
   Future<void> _getAssetsURL(String url) async {
-    try {
-      Uri urlToCall = Uri.parse(url);
-      http.Response response = await http.get(urlToCall);
+    if (Uri.parse(url).isAbsolute) {
+      try {
+        Uri urlToCall = Uri.parse(url);
+        http.Response response = await http.get(urlToCall);
 
-      // update state to set _iCalendar with .ics data
+        // update state to set _iCalendar with .ics data
+        setState(() {
+          _iCalendar = ICalendar.fromString(response.body);
+        });
+        // If an error occured, update stat to cancel CircularProgressIndicator
+      } catch (e) {
+        setState(() {
+          _isError = true;
+          _isLoading = false;
+        });
+      }
+    } else {
       setState(() {
-        _iCalendar = ICalendar.fromString(response.body);
+        _isError = true;
+        _isLoading = false;
       });
-      // If an error occured, update stat to cancel CircularProgressIndicator
-    } catch (e) {
-      setState(() => _isLoading = false);
-      throw 'Error: $e';
     }
   }
 
@@ -79,30 +84,60 @@ class _AgendaWidgetState extends State<AgendaWidget> {
     // list of appointments
     List<Appointment> appointments = <Appointment>[];
 
-    await _getAssetsURL("");
+    // get URL of agenda from database
+    String? link = await linkModal().getLink();
 
-    // add appointment from data parsed
-    appointments.addAll(_iCalendar!.data.map((e) => Appointment(
-        startTime: e["dtstart"].toDateTime(),
-        endTime: e["dtend"].toDateTime(),
-        subject: e["summary"],
-        location: e["location"],
-        notes: e["description"],
-        color: Colors.red)));
+    if (link != null) {
+      await _getAssetsURL(link);
 
-    // update state to show appointments in calendar and cancel CircularProgressIndicator
-    setState(() {
-      _ds = DataSource(appointments);
-      _isLoading = false;
-    });
+      if (_iCalendar != null) {
+        // add appointment from data parsed
+        appointments.addAll(_iCalendar!.data.map((e) => Appointment(
+            startTime: e["dtstart"].toDateTime(),
+            endTime: e["dtend"].toDateTime(),
+            subject: e["summary"],
+            location: e["location"],
+            notes: e["description"],
+            color: Colors.red)));
+
+        // update state to show appointments in calendar and cancel CircularProgressIndicator
+        setState(() {
+          _ds = DataSource(appointments);
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isError = true;
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isError = true;
+        _isLoading = false;
+      });
+    }
   }
 
   /// Build calendar widget
   @override
   Widget build(BuildContext context) {
-    if (_ds == null || _isLoading) {
+    if (_isError) {
+      return Scaffold(
+          appBar:
+              AppBar(backgroundColor: Colors.red, title: const Text("Agenda")),
+          body: Center(
+              child: Text("URL de l'agenda invalide ou non-fournis.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold)))));
+    } else if (_ds == null || _isLoading) {
       _getCalendarDataSource();
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(
+          appBar:
+              AppBar(backgroundColor: Colors.red, title: const Text("Agenda")),
+          body: const Center(child: CircularProgressIndicator()));
     } else {
       return Scaffold(
           appBar:

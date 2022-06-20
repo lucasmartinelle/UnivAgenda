@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'settings.dart';
 import 'agenda.dart';
 
 void main() {
@@ -61,10 +63,7 @@ class _StatefulApplication extends State<StatefulApplication> {
     // Deuxième widget
     AgendaWidget(),
     // Troisième widget
-    Text(
-      'Mail coming soon...',
-      style: optionStyle,
-    ),
+    SettingWidget()
   ];
 
   /// Fonction appelée lorsqu'on clique sur la barre de navigation
@@ -98,8 +97,8 @@ class _StatefulApplication extends State<StatefulApplication> {
             label: 'Agenda',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mail),
-            label: 'Mail',
+            icon: Icon(Icons.settings),
+            label: 'Paramètres',
           ),
         ],
         // Index du widget actuellement affiché
