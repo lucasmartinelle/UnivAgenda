@@ -25,7 +25,7 @@ class linkModal {
     }
 
     final List<Map<String, dynamic>> maps = await _database!.query('links');
-
+    print(_database!.query('links'));
     if (maps.isNotEmpty) {
       return maps.first['link'];
     }
@@ -60,5 +60,6 @@ class linkModal {
       await _database!.update("links", link.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
     }
+    print(_database!.query('links'));
   }
 }
