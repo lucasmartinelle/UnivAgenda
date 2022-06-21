@@ -1,16 +1,34 @@
-# flutter_application_1
+# UnivAgenda
 
-A new Flutter project.
+![banner](https://zupimages.net/up/22/25/6psj.jpg)
 
-## Getting Started
+`UnivAgenda` is project created by a lazy student. Indeed, this one don't want to open his browser, connect to his university account, go to his schedule to finally change the view of this one and thus make appear only his personal schedule. To facilitate this, he created this application. From now on, he just has to enter the URL of his schedule to access it freely without any difficulty
 
-This project is a starting point for a Flutter application.
+### Usage
 
-A few resources to get you started if this is your first Flutter project:
+To use the application you just need to move the file `app-release.apk` on your phone. Then, launch the apk from your phone to proceed with the installation.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+The application is currently only available in French
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Screenshot
+
+##### home
+
+![home](https://zupimages.net/up/22/25/gift.jpg)
+
+##### calendar
+
+![agenda](https://zupimages.net/up/22/25/a0gs.png)
+
+![agenda2](https://zupimages.net/up/22/25/y4kd.jpg)
+
+##### settings
+
+![settings](https://zupimages.net/up/22/25/z1sk.jpg)
+
+
+
+
+
+
+
